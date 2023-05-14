@@ -1,0 +1,31 @@
+{
+  "name": "controle-de-estoque",
+  "version": "1.0.0",
+  "description": "Uma api que fornece dados do banco de dados de uma estoque, onde pode cadastrar novos produtos, editar, excluir além de ter informações de produtos que precisam ser abastecidos e com uso de atentificação",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bytutscode/controle-de-estoque.git"
+  },
+  "keywords": [
+    "node-js",
+    "api"
+  ],
+  "author": "Samuel Lima",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bytutscode/controle-de-estoque/issues"
+  },
+  "homepage": "https://github.com/bytutscode/controle-de-estoque#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mysql2": "^3.3.1",
+    "sequelize": "^6.31.1"
+  }
+}
