@@ -11,5 +11,4 @@ const sequelize = new Sequelize(
         port:+process.env.MYSQL_PORT
     }
 )
-    console.log('conectado ao banco de dados');
 module.exports = sequelize;
