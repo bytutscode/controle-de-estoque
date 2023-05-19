@@ -1,11 +1,10 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const next = require('express');
 
 module.exports = {
-    private: async (req, res)=>{
+    private: async (req, res, next)=>{
         //Getting the received token
-        const token = req.body.token;
+        const token = req.query.token;
 
         // if there's no token, the server will send an error message and stop the process 
         if(!token){
@@ -26,7 +25,28 @@ module.exports = {
 
         // everything is ok and the user token matches so the user is logged in
         res.statusCode = 200;
-        res.json({success:true});
+        next();
+    },
+
+    privateAdm: async(req, res, next)=>{
+
+        const token = req.body.token;
+
+        if(!token){
+            res.statusCode= 403;
+            res.json({error:'token não fornecido!'});
+            return;
+        }
+
+        let user = await User.findOne({where:{token,position:'adm'}});
+
+        if(!user){
+            res.statusCode = 403;
+            res.json({error:'acesso negado! Você precisa ter sua position como "ADM" para usar essa rota!'});
+            return
+        }
+
+       res.statusCode = 200;
         next();
     }
 }

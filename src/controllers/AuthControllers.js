@@ -13,6 +13,7 @@ module.exports = {
             return;
         }
 
+
         const {email,name,position='seller',password} = matchedData(req);
 
         // verifying if already has the email in the database

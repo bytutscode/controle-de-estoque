@@ -17,6 +17,12 @@ module.exports = {
         password:{
             isLength:{options:{min:4,max:50}},
             errorMessage:'O usuário precisa ter uma senha de no minimo 4 caracteres!'
+        },
+        position:{
+            isLength:{options:{min:3}},
+            default:'Vendedor',
+            errorMessage:'Você deve ter um cargo válido!',
+            trim:true
         }
 
     }),
