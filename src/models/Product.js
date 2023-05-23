@@ -7,7 +7,7 @@ class Product extends Model{};
 Product.init({
     id:{primaryKey: true, type:Number, autoIncrement: true},
     name:{type:String},
-    category: String,
+    category: {type: String},
     description:String,
     supplier_id: Number,
     price:Number,
@@ -15,7 +15,8 @@ Product.init({
     min_quantity:Number,
     max_quantity:Number,
     reorder_quantity:Number,
-    note:String
+    note:String,
+    media:String
 },{sequelize,tableName:'products',timestamps:false});
 
 

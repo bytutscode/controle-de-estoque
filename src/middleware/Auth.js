@@ -31,6 +31,7 @@ module.exports = {
     privateAdm: async(req, res, next)=>{
 
         const token = req.body.token;
+        console.log(req.body)
 
         if(!token){
             res.statusCode= 403;
