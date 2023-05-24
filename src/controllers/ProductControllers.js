@@ -3,6 +3,8 @@ const { matchedData, validationResult } = require('express-validator');
 require('dotenv').config();
 const request = require('request');
 const fs = require('fs');
+const Historic = require('../models/Historic');
+const User = require('../models/User');
 
 
 
@@ -13,17 +15,17 @@ module.exports = {
         let { limit = 20, offset = 0 } = req.query;
         let pag = req.params.pag;
         let products;
-        
-        if(pag && !isNaN(pag) ){
-            
+
+        if (pag && !isNaN(pag)) {
+
             +pag > 0 ? offset = 10 : offset;
-        // getting all products and establishing limit and the offset
-        products = await Product.findAll({ limit, offset: offset * (+pag) });
+            // getting all products and establishing limit and the offset
+            products = await Product.findAll({ limit, offset: offset * (+pag) });
         } else {
             products = await Product.findAll({ limit });
         }
 
-         
+
 
 
         // case there's no products send an error msg
@@ -57,9 +59,9 @@ module.exports = {
             newProduct[keys[i]] = data[keys[i]];
         }
 
-        if(req.file) {
+        if (req.file) {
 
-            img =  req.file.path;
+            img = req.file.path;
 
             newProduct.media = img;
 
@@ -67,7 +69,16 @@ module.exports = {
             newProduct.media = 'file:///C://Users//Bytuts//Documents//dev//personal-projects//Armazenamento-de-estoque//controle-de-estoque//public/media/media-1684786144705-640952349.png';
         }
 
-       await newProduct.save();
+        await newProduct.save();
+
+        let userToken = req.body.token;
+        let user = await User.findOne({where:{token:userToken}});
+
+        let infoUser = Historic.build();
+        infoUser.user_id = user.id;
+        infoUser.user_name = user.name;
+        infoUser.action = `${user.name} cadastrou ${newProduct.name} no estoque;`;
+        await infoUser.save();
 
         res.json({ newProduct })
 
@@ -83,52 +94,62 @@ module.exports = {
 
         let productId = req.params.id;
 
-        if(!productId){
-            res.json({error:'id do produto não fornecido!'});
+        if (!productId) {
+            res.json({ error: 'id do produto não fornecido!' });
             return;
         }
 
         let product = await Product.findByPk(productId);
 
-        if(!product){
+        if (!product) {
             res.statusCode = 404;
-            res.json({error:'404 não encontrado!'});
+            res.json({ error: '404 não encontrado!' });
             return;
         }
 
         let data = matchedData(req);
         let keys = Object.keys(data);
         let img;
-
+        let infoUser = Historic.build();
+        infoUser.action = '';
         for (let i = 0; i < keys.length; i++) {
             product[keys[i]] = data[keys[i]];
+            infoUser.action += ` Editou ${keys[i]} para ${data[keys[i]]}; `;
         }
 
-        if(req.file) {
-            img =  req.file.path;
+        if (req.file) {
+            img = req.file.path;
             product.media = img;
-        } 
+        }
 
         await product.save();
+        let token = req.body.token;
+        let user = await User.findOne({ where: { token } });
+
+
+        infoUser.user_id = user.id;
+        infoUser.user_name = user.name;
+        infoUser.action += `Do produto ${product.name}`;
+        await infoUser.save();
 
         res.statusCode = 200;
-        res.json({success:'Alteração feita com sucesso!'});
+        res.json({ success: 'Alteração feita com sucesso!' });
     },
 
     deleteProduct: async (req, res) => {
 
         let id = req.params.id;
 
-        if(!id){
-            res.json({error:'Id do produto não fornecido!!!'});
+        if (!id) {
+            res.json({ error: 'Id do produto não fornecido!!!' });
             return;
         }
 
         let product = await Product.findByPk(id);
 
-        if(!product){
+        if (!product) {
             res.statusCode = 404;
-            res.json({error:'O produto não foi encontrado no banco de dados!'});
+            res.json({ error: 'O produto não foi encontrado no banco de dados!' });
             return;
         }
 
@@ -136,6 +157,17 @@ module.exports = {
 
         product.destroy();
 
-        res.json({success:`${info.name} do ID ${info.id}, foi apagado do banco de dados!`});
-    },
+        let token = req.body.token;
+        let user = await User.findOne({ where: { token } });
+
+        let infoUser = Historic.build();
+        infoUser.user_id = user.id;
+        infoUser.user_name = user.name;
+        infoUser.action = `Deletou ${info.name} do estoque!`;
+        await infoUser.save();
+
+        res.json({ success: `${info.name} do ID ${info.id}, foi apagado do banco de dados!` });
+    }
+
+
 }

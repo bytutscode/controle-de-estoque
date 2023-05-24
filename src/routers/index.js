@@ -6,6 +6,7 @@ const AuthValidator = require('../validators/AuthValidator');
 const UserValidator = require('../validators/UserValidator');
 const ProductValidator = require('../validators/ProductValidator');
 const ProductControllers = require('../controllers/ProductControllers');
+const HistoricControllers = require('../controllers/HistoricControllers');
 const multer = require('multer');
 multer({dest:__dirname+'../../../public/media'})
 
@@ -47,6 +48,22 @@ router.get('/produtos/:pag',private.private,ProductControllers.getAllProducts);
 router.post('/produtos/cadastrar',upload.single('media'), private.privateAdm,ProductValidator.registerProduct,ProductControllers.registerProduct);
 router.put('/produtos/editar/:id',upload.single('media'), private.privateAdm,ProductValidator.editProduct,ProductControllers.editProduct);
 router.delete('/produtos/deletar/:id', private.privateAdm,ProductControllers.deleteProduct);
+
+//historic
+router.post('/historico',private.privateAdm, HistoricControllers.showHistoric);
+router.delete('/historico/deletar/:id',private.privateAdm, HistoricControllers.deleteOneHistoric);
+
+
+//sellers
+
+// router.post('/venda',private.private,)
+
+
+
+//error 404 not found!
+router.use((req, res)=>{
+  res.json({error:'Página não encontrada!'});
+})
 
 
 

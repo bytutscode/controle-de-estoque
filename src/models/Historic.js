@@ -7,7 +7,7 @@ class Historic extends Model{};
 Historic.init({
     id:{primaryKey:true, autoIncrement:true, type:Number},
     user_id:Number,
-    user_Name:String,
+    user_name:String,
     action:String
 },{sequelize, tableName:'historic',timestamps:false});
 

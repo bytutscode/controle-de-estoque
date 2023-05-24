@@ -28,7 +28,6 @@ module.exports = {
         },
         price:{
             optional:true,
-            isNumeric:true,
             errorMessage:'preço inválido!'
         },
         quantity:{
@@ -87,7 +86,6 @@ module.exports = {
         },
         price:{
             optional:true,
-            isNumeric:true,
             errorMessage:'preço inválido!'
         },
         quantity:{
