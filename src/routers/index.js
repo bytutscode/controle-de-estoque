@@ -7,6 +7,7 @@ const UserValidator = require('../validators/UserValidator');
 const ProductValidator = require('../validators/ProductValidator');
 const ProductControllers = require('../controllers/ProductControllers');
 const HistoricControllers = require('../controllers/HistoricControllers');
+const SaleControllers = require('../controllers/Sales');
 const multer = require('multer');
 multer({dest:__dirname+'../../../public/media'})
 
@@ -44,6 +45,7 @@ router.delete('/fornecedor/deletar/:id', private.privateAdm,UserControllers.dele
 
 //products
 router.get('/produtos',private.private,ProductControllers.getAllProducts);
+router.get('/produtos/acabando',private.private,ProductControllers.ending);
 router.get('/produtos/:pag',private.private,ProductControllers.getAllProducts);
 router.post('/produtos/cadastrar',upload.single('media'), private.privateAdm,ProductValidator.registerProduct,ProductControllers.registerProduct);
 router.put('/produtos/editar/:id',upload.single('media'), private.privateAdm,ProductValidator.editProduct,ProductControllers.editProduct);
@@ -56,7 +58,7 @@ router.delete('/historico/deletar/:id',private.privateAdm, HistoricControllers.d
 
 //sellers
 
-// router.post('/venda',private.private,)
+router.post('/venda/:id',private.private,SaleControllers.sell);
 
 
 

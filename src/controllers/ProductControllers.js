@@ -5,6 +5,7 @@ const request = require('request');
 const fs = require('fs');
 const Historic = require('../models/Historic');
 const User = require('../models/User');
+const {Op, Sequelize} = require('sequelize');
 
 
 
@@ -167,6 +168,18 @@ module.exports = {
         await infoUser.save();
 
         res.json({ success: `${info.name} do ID ${info.id}, foi apagado do banco de dados!` });
+    },
+
+
+    ending: async (req, res) =>{
+
+        let endingProducts = await Product.findAll({where:{quantity:{[Op.lte]:Sequelize.col('min_quantity')}}});
+
+        if(endingProducts.length < 1){
+            res.json({msg:'Não temos produtos abaixo ou igual do minimo requerido!'});
+            return;
+        }
+        res.json(endingProducts);
     }
 
 

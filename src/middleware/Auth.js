@@ -4,15 +4,14 @@ const jwt = require('jsonwebtoken');
 module.exports = {
     private: async (req, res, next)=>{
         //Getting the received token
-        const token = req.query.token;
-
+        const token = req.query.token || req.body.token;
+        
         // if there's no token, the server will send an error message and stop the process 
         if(!token){
             res.statusCode = 403;
             res.json({error:'acesso negado!'});
             return;
         }
-
         // verifying if there is a user that his token matches with the received token
         let verifyToken =  await User.findOne({where:{token}});
 
